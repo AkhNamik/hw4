@@ -1,8 +1,8 @@
 import React from "react"
 import "./StopWatch.css"
-import playIcon from "./img/playIcon.png"
-import pauseIcon from "./img/pauseIcon.png"
-import snowIcon from "./img/snowflake-o.png"
+import playIcon from "../img/playIcon.png"
+import pauseIcon from "../img/pauseIcon.png"
+import snowIcon from "../img/snowflake-o.png"
 interface State {
   m: number
   h: number
@@ -42,7 +42,6 @@ class StopWatch extends React.Component<{}, State> {
     }
   }
   render() {
-    console.log("render")
     return (
       <div className="stopwatch">
         <div className="stopwatch_leftBox">
