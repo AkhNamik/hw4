@@ -1,4 +1,4 @@
-import React from "react"
+import React, { PureComponent } from "react"
 import "./StopWatch.css"
 import playIcon from "../img/playIcon.png"
 import pauseIcon from "../img/pauseIcon.png"
@@ -9,7 +9,7 @@ interface State {
   s: number
   isRunning: boolean
 }
-class StopWatch extends React.Component<{}, State> {
+class StopWatch extends PureComponent<{}, State> {
   public state: State = {
     m: 0,
     h: 0,
@@ -25,21 +25,33 @@ class StopWatch extends React.Component<{}, State> {
     this.setState((state) => ({
       isRunning: !state.isRunning,
     }))
-    if (!this.state.isRunning) {
-      this.setState({ isRunning: true })
-      this.watch = setInterval(
-        () =>
-          this.setState((state) => ({
-            s: state.s === 59 ? 0 : state.s + 1,
-            m: state.s === 59 ? state.m + 1 : state.m,
-            h: state.m === 59 ? state.h + 1 : state.h,
-          })),
-        1000
-      )
+  }
+  // shouldComponentUpdate(){
+  //   console.log("с PureComponent возвращает всегда true когда поменялись state или props, если не поменялись то возврщает false")
+  // }
+  componentDidMount() {
+    console.log("Сработает сразу после первого рендера и больше не вызовится")
+    this.watch = setInterval(() => this.changeValue(), 1000)
+  }
+  componentDidUpdate() {
+    console.log("Сработает сразу после рендера если поменяется state или props")
+  }
+  changeValue = () => {
+    if (this.state.isRunning) {
+      this.setState((state) => ({
+        s: state.s === 59 ? 0 : state.s + 1,
+        m: state.s === 59 ? state.m + 1 : state.m,
+        h: state.m === 59 ? state.h + 1 : state.h,
+      }))
     } else {
-      this.setState({ m: 0, h: 0, s: 0 })
-      clearInterval(this.watch)
+      this.setState((state) => ({ s: 0, m: 0, h: 0 }))
     }
+  }
+  componentWillUnmount() {
+    console.log(
+      "Сработает когда не будет перерендывать, убираем за нас весь мусор"
+    )
+    clearInterval(this.watch)
   }
   render() {
     return (
